@@ -1,0 +1,5 @@
+node_modules/
+.firebase/
+.claude/
+*.log
+package-lock.json

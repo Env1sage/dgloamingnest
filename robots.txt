@@ -1,0 +1,35 @@
+User-agent: *
+Allow: /
+Disallow: /cgi-bin/
+Disallow: /admin/
+Disallow: /*.json$
+Disallow: /*.pdf$
+
+# Sitemap location
+Sitemap: https://dgloamingnest.com/sitemap.xml
+
+# Allow images
+User-agent: Googlebot-Image
+Allow: /images/
+
+# Allow all major search engines
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 10
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 10
+
+User-agent: Slurp
+Allow: /
+
+# Block bad bots
+User-agent: AhrefsBot
+Crawl-delay: 30
+
+User-agent: SemrushBot
+Crawl-delay: 30
+
+User-agent: DotBot
+Crawl-delay: 30

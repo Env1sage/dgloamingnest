@@ -1,0 +1,27 @@
+{
+  "name": "D Gloaming Nest - Best PG for Girls in Pune",
+  "short_name": "D Gloaming Nest",
+  "description": "Premium PG and girls hostel in Kalyani Nagar, Pune offering safe and comfortable accommodation for students and working women",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f9f7f2",
+  "theme_color": "#d4af37",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/images/gloamingnestlogo_x4 (2).png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/images/gloamingnestlogo_x4 (2).png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["accommodation", "hostel", "lifestyle"],
+  "lang": "en-IN",
+  "dir": "ltr"
+}

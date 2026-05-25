@@ -1,0 +1,40 @@
+name: Deploy to Hostinger
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Deploy via FTP to Hostinger
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./
+          server-dir: /public_html/
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            **/.firebase/**
+            **/FIREBASE_DEPLOYMENT_GUIDE.md
+            **/DEPLOYMENT_CHECKLIST.md
+            **/CUSTOM_DOMAIN_SETUP.md
+            **/SEO_IMPLEMENTATION_REPORT.md
+            **/SEO_OPTIMIZATION_SUMMARY.md
+            **/SEO_QUICK_REFERENCE.md
+            **/README.md
+            **/generate-icons.js
+            **/google-apps-script.js
+            **/package.json
+            **/package-lock.json
+            **/.claude/**
+            **/public/**
