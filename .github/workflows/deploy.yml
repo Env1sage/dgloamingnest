@@ -29,6 +29,7 @@ jobs:
             **/.git*/**
             **/node_modules/**
             **/.firebase/**
+            **/images/**
             **/FIREBASE_DEPLOYMENT_GUIDE.md
             **/DEPLOYMENT_CHECKLIST.md
             **/CUSTOM_DOMAIN_SETUP.md
