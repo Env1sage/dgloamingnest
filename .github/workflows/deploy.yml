@@ -1,0 +1,46 @@
+name: Deploy to Hostinger
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install sshpass and rsync
+        run: sudo apt-get install -y sshpass rsync
+
+      - name: Deploy via rsync over SSH
+        env:
+          SSH_PASS: ${{ secrets.FTP_PASSWORD }}
+        run: |
+          sshpass -p "$SSH_PASS" rsync -avz --delete \
+            -e "ssh -p 65002 -o StrictHostKeyChecking=no" \
+            --exclude='.git' \
+            --exclude='node_modules' \
+            --exclude='.firebase' \
+            --exclude='.claude' \
+            --exclude='public' \
+            --exclude='.gitignore' \
+            --exclude='deploy_key' \
+            --exclude='deploy_key.pub' \
+            --exclude='dgloamingnest-deploy.zip' \
+            --exclude='FIREBASE_DEPLOYMENT_GUIDE.md' \
+            --exclude='DEPLOYMENT_CHECKLIST.md' \
+            --exclude='CUSTOM_DOMAIN_SETUP.md' \
+            --exclude='SEO_IMPLEMENTATION_REPORT.md' \
+            --exclude='SEO_OPTIMIZATION_SUMMARY.md' \
+            --exclude='SEO_QUICK_REFERENCE.md' \
+            --exclude='README.md' \
+            --exclude='generate-icons.js' \
+            --exclude='google-apps-script.js' \
+            --exclude='package.json' \
+            --exclude='package-lock.json' \
+            --exclude='.github' \
+            ./ u792884062@147.93.17.215:/home/u792884062/public_html/
