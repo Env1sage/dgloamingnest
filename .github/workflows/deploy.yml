@@ -13,24 +13,36 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install lftp
-        run: sudo apt-get install -y lftp
-
-      - name: Deploy to Hostinger
-        env:
-          FTP_HOST: ${{ secrets.FTP_HOSTNAME }}
-          FTP_USER: ${{ secrets.FTP_USERNAME }}
-          FTP_PASS: ${{ secrets.FTP_PASSWORD }}
+      - name: Setup SSH key
         run: |
-          cat > /tmp/deploy.lftp << LFTP
-          set ftp:ssl-force true
-          set ssl:verify-certificate no
-          set net:timeout 60
-          set net:max-retries 5
-          set net:reconnect-interval-base 5
-          set ftp:passive-mode yes
-          open -u "$FTP_USER,$FTP_PASS" ftps://$FTP_HOST
-          mirror --reverse --delete --verbose --parallel=2 --exclude-glob .git/ --exclude-glob node_modules/ --exclude-glob .firebase/ --exclude-glob .claude/ --exclude-glob public/ --exclude .gitignore --exclude FIREBASE_DEPLOYMENT_GUIDE.md --exclude DEPLOYMENT_CHECKLIST.md --exclude CUSTOM_DOMAIN_SETUP.md --exclude SEO_IMPLEMENTATION_REPORT.md --exclude SEO_OPTIMIZATION_SUMMARY.md --exclude SEO_QUICK_REFERENCE.md --exclude README.md --exclude generate-icons.js --exclude google-apps-script.js --exclude package.json --exclude package-lock.json . /public_html
-          bye
-          LFTP
-          lftp < /tmp/deploy.lftp
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -p 65002 -H 147.93.17.215 >> ~/.ssh/known_hosts
+
+      - name: Deploy via rsync over SSH
+        run: |
+          rsync -avz --delete \
+            -e "ssh -i ~/.ssh/deploy_key -p 65002 -o StrictHostKeyChecking=no" \
+            --exclude='.git' \
+            --exclude='node_modules' \
+            --exclude='.firebase' \
+            --exclude='.claude' \
+            --exclude='public' \
+            --exclude='.gitignore' \
+            --exclude='deploy_key' \
+            --exclude='deploy_key.pub' \
+            --exclude='dgloamingnest-deploy.zip' \
+            --exclude='FIREBASE_DEPLOYMENT_GUIDE.md' \
+            --exclude='DEPLOYMENT_CHECKLIST.md' \
+            --exclude='CUSTOM_DOMAIN_SETUP.md' \
+            --exclude='SEO_IMPLEMENTATION_REPORT.md' \
+            --exclude='SEO_OPTIMIZATION_SUMMARY.md' \
+            --exclude='SEO_QUICK_REFERENCE.md' \
+            --exclude='README.md' \
+            --exclude='generate-icons.js' \
+            --exclude='google-apps-script.js' \
+            --exclude='package.json' \
+            --exclude='package-lock.json' \
+            --exclude='.github' \
+            ./ u792884062@147.93.17.215:/home/u792884062/public_html/
