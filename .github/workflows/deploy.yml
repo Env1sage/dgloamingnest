@@ -13,17 +13,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup SSH key
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" | base64 -d > ~/.ssh/deploy_key
-          chmod 600 ~/.ssh/deploy_key
-          ssh-keyscan -p 65002 -H 147.93.17.215 >> ~/.ssh/known_hosts
+      - name: Install sshpass and rsync
+        run: sudo apt-get install -y sshpass rsync
 
       - name: Deploy via rsync over SSH
+        env:
+          SSH_PASS: ${{ secrets.FTP_PASSWORD }}
         run: |
-          rsync -avz --delete \
-            -e "ssh -i ~/.ssh/deploy_key -p 65002 -o StrictHostKeyChecking=no" \
+          sshpass -p "$SSH_PASS" rsync -avz --delete \
+            -e "ssh -p 65002 -o StrictHostKeyChecking=no" \
             --exclude='.git' \
             --exclude='node_modules' \
             --exclude='.firebase' \
